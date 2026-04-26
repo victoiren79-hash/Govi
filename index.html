@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Govi — Websites for Small Businesses</title>
+  <meta name="description" content="Fast, personalized websites for small businesses. Starting at $299." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:     #F8F7F4;
+      --ink:    #111110;
+      --orange: #F97316;
+      --o10:    rgba(249,115,22,0.10);
+      --o20:    rgba(249,115,22,0.20);
+      --muted:  #6B6B6B;
+      --line:   #E4E1DC;
+      --white:  #FFFFFF;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ─── KEYFRAMES ─── */
+    @keyframes fadeUp   { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeIn   { from { opacity:0; } to { opacity:1; } }
+    @keyframes scaleIn  { from { opacity:0; transform:scale(.94); } to { opacity:1; transform:scale(1); } }
+    @keyframes pulseDot { 0%,100%{box-shadow:0 0 0 0 rgba(249,115,22,.5);}50%{box-shadow:0 0 0 7px rgba(249,115,22,0);} }
+    @keyframes marquee  { from{transform:translateX(0);} to{transform:translateX(-50%);} }
+    @keyframes floatY   { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
+    @keyframes drawLine { from{stroke-dashoffset:1000;} to{stroke-dashoffset:0;} }
+    @keyframes shimmer  { 0%{background-position:-400px 0;} 100%{background-position:400px 0;} }
+    @keyframes spinDot  { to{transform:rotate(360deg);} }
+    @keyframes barGrow  { from{width:0;} to{width:var(--w);} }
+    @keyframes blink    { 0%,100%{opacity:1;} 50%{opacity:0;} }
+
+    /* reveal */
+    .rev { opacity:0; transform:translateY(24px); transition:opacity .65s ease,transform .65s ease; }
+    .rev.in { opacity:1; transform:translateY(0); }
+    .rev-delay-1 { transition-delay:.1s; }
+    .rev-delay-2 { transition-delay:.2s; }
+    .rev-delay-3 { transition-delay:.3s; }
+    .rev-delay-4 { transition-delay:.4s; }
+
+    /* ─── NAV ─── */
+    nav {
+      position: sticky; top:0; z-index:100;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:18px 40px;
+      background:rgba(248,247,244,.93);
+      backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--line);
+    }
+    .logo { font-family:'Fraunces',serif; font-weight:900; font-size:1.45rem; color:var(--ink); text-decoration:none; letter-spacing:-.02em; }
+    .logo span { color:var(--orange); }
+    .nav-links { display:flex; align-items:center; gap:28px; }
+    .nav-links a { text-decoration:none; color:var(--muted); font-size:.85rem; font-weight:500; transition:color .15s; }
+    .nav-links a:hover { color:var(--ink); }
+    .nav-btn { background:var(--ink); color:var(--bg)!important; padding:9px 20px; border-radius:999px; font-size:.83rem!important; font-weight:600!important; transition:opacity .15s,transform .15s; }
+    .nav-btn:hover { opacity:.82; transform:translateY(-1px); }
+    .ham { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:4px; }
+    .ham span { display:block; width:22px; height:2px; background:var(--ink); border-radius:2px; transition:.2s; }
+
+    /* ─── HERO ─── */
+    .hero {
+      max-width:900px; margin:0 auto;
+      padding:72px 40px 56px;
+      text-align:center; position:relative;
+    }
+    .hero-pill {
+      display:inline-flex; align-items:center; gap:8px;
+      font-size:.72rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
+      color:var(--orange); margin-bottom:28px;
+      animation:fadeIn .5s ease both;
+    }
+    .hero-pill-dot { width:7px; height:7px; border-radius:50%; background:var(--orange); animation:pulseDot 2s infinite; }
+
+    .hero h1 {
+      font-family:'Fraunces',serif; font-weight:900;
+      font-size:clamp(2.6rem,6.5vw,5.4rem);
+      line-height:1.05; letter-spacing:-.03em;
+      color:var(--ink); margin-bottom:22px;
+      animation:fadeUp .7s .1s ease both;
+    }
+    .hero h1 em { font-style:italic; color:var(--orange); }
+
+    .hero p {
+      font-size:1rem; color:var(--muted);
+      max-width:380px; margin:0 auto 36px; line-height:1.75;
+      animation:fadeUp .7s .2s ease both;
+    }
+    .hero-btns { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; animation:fadeUp .7s .3s ease both; }
+
+    /* browser mockup */
+    .browser-wrap {
+      margin:52px auto 0; max-width:680px;
+      animation:scaleIn .8s .5s ease both;
+      position:relative;
+    }
+    .browser-wrap::before {
+      content:'';
+      position:absolute; inset:-1px; border-radius:15px;
+      background:linear-gradient(135deg,var(--orange),transparent 60%);
+      opacity:.25; z-index:-1;
+    }
+    .browser {
+      background:#fff; border-radius:14px;
+      box-shadow:0 24px 80px rgba(0,0,0,.13), 0 4px 16px rgba(0,0,0,.08);
+      overflow:hidden; border:1px solid var(--line);
+    }
+    .browser-bar {
+      background:#F2F1EE; padding:10px 16px;
+      display:flex; align-items:center; gap:12px;
+      border-bottom:1px solid var(--line);
+    }
+    .browser-dots { display:flex; gap:6px; }
+    .browser-dots span { width:10px; height:10px; border-radius:50%; }
+    .browser-dots span:nth-child(1){background:#FF5F57;}
+    .browser-dots span:nth-child(2){background:#FFBD2E;}
+    .browser-dots span:nth-child(3){background:#28CA41;}
+    .browser-url {
+      flex:1; background:#fff; border-radius:6px;
+      padding:5px 12px; font-size:.72rem; color:var(--muted);
+      border:1px solid var(--line); display:flex; align-items:center; gap:6px;
+    }
+    .url-lock { color:#28CA41; font-size:.75rem; }
+    .browser-body { padding:24px; background:#FAFAF9; }
+
+    /* fake site inside browser */
+    .mock-nav { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+    .mock-logo { width:48px; height:8px; background:var(--ink); border-radius:4px; }
+    .mock-nav-links { display:flex; gap:8px; }
+    .mock-nav-links span { width:28px; height:6px; background:var(--line); border-radius:3px; }
+    .mock-nav-btn { width:52px; height:22px; background:var(--orange); border-radius:999px; }
+
+    .mock-hero-area { text-align:center; padding:16px 0 20px; }
+    .mock-h1 { width:70%; height:14px; background:var(--ink); border-radius:4px; margin:0 auto 8px; }
+    .mock-h1b { width:55%; height:14px; background:var(--ink); border-radius:4px; margin:0 auto 10px; opacity:.7; }
+    .mock-sub { width:45%; height:7px; background:var(--line); border-radius:3px; margin:0 auto 14px; }
+    .mock-btns { display:flex; gap:8px; justify-content:center; }
+    .mock-btn-a { width:80px; height:26px; background:var(--ink); border-radius:999px; }
+    .mock-btn-b { width:70px; height:26px; border:1.5px solid var(--line); border-radius:999px; }
+
+    .mock-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:16px; }
+    .mock-card {
+      background:#fff; border:1px solid var(--line); border-radius:8px;
+      padding:10px; position:relative; overflow:hidden;
+    }
+    .mock-card::after {
+      content:'';
+      position:absolute; inset:0;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);
+      background-size:200% 100%;
+      animation:shimmer 2.4s infinite;
+    }
+    .mock-card-icon { width:20px; height:20px; background:var(--o10); border-radius:5px; margin-bottom:7px; border:1px solid var(--o20); }
+    .mock-card-t { width:60%; height:6px; background:var(--ink); border-radius:3px; margin-bottom:5px; }
+    .mock-card-s { width:80%; height:5px; background:var(--line); border-radius:3px; }
+
+    /* cursor blink on mockup */
+    .mock-cursor {
+      display:inline-block; width:2px; height:14px;
+      background:var(--orange); border-radius:1px; margin-left:3px;
+      animation:blink .9s step-end infinite; vertical-align:middle;
+    }
+
+    /* ─── MARQUEE ─── */
+    .marquee-wrap {
+      border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+      overflow:hidden; padding:14px 0; background:var(--white);
+    }
+    .marquee-track {
+      display:flex; gap:0; width:max-content;
+      animation:marquee 22s linear infinite;
+    }
+    .marquee-track:hover { animation-play-state:paused; }
+    .marquee-item {
+      display:flex; align-items:center; gap:10px;
+      padding:0 36px; white-space:nowrap;
+      font-size:.78rem; font-weight:500; color:var(--muted);
+      border-right:1px solid var(--line);
+    }
+    .marquee-dot { width:5px; height:5px; border-radius:50%; background:var(--orange); flex-shrink:0; }
+
+    /* ─── PROOF BAR ─── */
+    .proof { display:flex; justify-content:center; border-bottom:1px solid var(--line); }
+    .proof-item {
+      flex:1; max-width:220px;
+      padding:28px 16px; text-align:center;
+      border-right:1px solid var(--line);
+      transition:background .18s;
+    }
+    .proof-item:last-child { border-right:none; }
+    .proof-item:hover { background:var(--o10); }
+    .proof-num { font-family:'Fraunces',serif; font-weight:700; font-size:2rem; color:var(--ink); line-height:1; margin-bottom:4px; }
+    .proof-num b { color:var(--orange); font-weight:inherit; }
+    .proof-lbl { font-size:.69rem; color:var(--muted); text-transform:uppercase; letter-spacing:.09em; }
+
+    /* ─── SECTIONS ─── */
+    .sec { max-width:880px; margin:0 auto; padding:80px 40px; }
+    .sec-tag { font-size:.68rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--orange); margin-bottom:12px; }
+    .sec h2 { font-family:'Fraunces',serif; font-weight:700; font-size:clamp(1.8rem,3.5vw,2.8rem); letter-spacing:-.02em; line-height:1.12; margin-bottom:44px; }
+    .sec h2 em { font-style:italic; color:var(--orange); }
+
+    /* ─── FEATURES ─── */
+    .features { display:grid; grid-template-columns:1fr 1fr; border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+    .feat {
+      padding:34px 36px;
+      border-bottom:1px solid var(--line); border-right:1px solid var(--line);
+      transition:background .2s, transform .2s;
+      cursor:default;
+    }
+    .feat:hover { background:var(--o10); transform:scale(1.01); }
+    .feat:nth-child(even)      { border-right:none; }
+    .feat:nth-last-child(-n+2) { border-bottom:none; }
+    .feat-num { font-family:'Fraunces',serif; font-weight:700; font-size:1rem; color:var(--orange); margin-bottom:8px; }
+    .feat h3  { font-size:.95rem; font-weight:600; margin-bottom:6px; }
+    .feat p   { font-size:.84rem; color:var(--muted); line-height:1.65; }
+
+    /* ─── SKILL BARS ─── */
+    .skills-section { background:var(--white); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+    .skills-grid { display:grid; grid-template-columns:1fr 1fr; gap:28px; }
+    .skill-item {}
+    .skill-head { display:flex; justify-content:space-between; margin-bottom:8px; font-size:.83rem; font-weight:500; }
+    .skill-pct { color:var(--orange); font-weight:600; }
+    .skill-track { height:5px; background:var(--line); border-radius:999px; overflow:hidden; }
+    .skill-bar { height:100%; background:var(--orange); border-radius:999px; width:0; transition:width 1.2s cubic-bezier(.4,0,.2,1); }
+
+    /* ─── PROCESS / HOW ─── */
+    .steps { border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+    .step {
+      display:flex; align-items:flex-start; gap:24px;
+      padding:30px 36px; border-bottom:1px solid var(--line);
+      transition:background .18s; position:relative;
+    }
+    .step:last-child { border-bottom:none; }
+    .step:hover { background:var(--o10); }
+    .step-n { font-family:'Fraunces',serif; font-weight:700; font-size:1.5rem; color:var(--orange); line-height:1; width:28px; flex-shrink:0; padding-top:1px; }
+    .step h3 { font-size:.93rem; font-weight:600; margin-bottom:4px; }
+    .step p  { font-size:.83rem; color:var(--muted); line-height:1.65; }
+    /* connector line between steps */
+    .step::after {
+      content:''; position:absolute;
+      left:54px; bottom:-1px;
+      width:2px; height:1px;
+      background:var(--orange); opacity:.3;
+    }
+
+    /* ─── TESTIMONIAL ─── */
+    .testi-section { background:var(--ink); }
+    .testi-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:#222; border-radius:12px; overflow:hidden; }
+    .testi-card { background:#191919; padding:34px 30px; }
+    .testi-stars { color:var(--orange); font-size:.85rem; letter-spacing:2px; margin-bottom:14px; }
+    .testi-text { font-size:.88rem; color:#bbb; line-height:1.75; font-style:italic; margin-bottom:20px; }
+    .testi-author { display:flex; align-items:center; gap:12px; }
+    .testi-avatar {
+      width:36px; height:36px; border-radius:50%;
+      background:var(--o10); border:1px solid var(--o20);
+      display:flex; align-items:center; justify-content:center;
+      font-family:'Fraunces',serif; font-weight:700; font-size:.85rem; color:var(--orange);
+      flex-shrink:0;
+    }
+    .testi-name { font-size:.85rem; font-weight:600; color:#ddd; }
+    .testi-biz  { font-size:.75rem; color:#555; }
+    .testi-section .sec-tag { color:var(--orange); }
+    .testi-section h2 { color:#F8F7F4; margin-bottom:36px; }
+
+    /* placeholder card */
+    .testi-placeholder {
+      background:#161616; display:flex; align-items:center; justify-content:center;
+      border:1.5px dashed #2a2a2a; padding:36px;
+    }
+    .testi-placeholder p { font-size:.83rem; color:#444; text-align:center; line-height:1.7; }
+    .testi-placeholder span { color:var(--orange); }
+
+    /* ─── PRICING ─── */
+    .pricing-bg { background:var(--ink); }
+    .pricing-bg .sec { max-width:920px; }
+    .pricing-bg .sec-tag { color:var(--orange); }
+    .pricing-bg h2 { font-family:'Fraunces',serif; font-weight:700; font-size:clamp(1.8rem,3.5vw,2.8rem); letter-spacing:-.02em; line-height:1.12; color:#F8F7F4; margin-bottom:8px; }
+    .pricing-sub { font-size:.88rem; color:#555; margin-bottom:44px; }
+    .plans { display:grid; grid-template-columns:repeat(3,1fr); border-radius:12px; overflow:hidden; border:1px solid #222; gap:1px; background:#222; }
+    .plan { background:#181818; padding:34px 28px; position:relative; transition:background .2s; }
+    .plan:hover { background:#1d1d1d; }
+    .plan.pop { background:#1e1e1e; }
+    .pop-badge { display:inline-block; background:var(--orange); color:#fff; font-size:.65rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; padding:3px 10px; border-radius:999px; margin-bottom:18px; }
+    .plan-tier { font-size:.68rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#555; margin-bottom:10px; }
+    .plan-price { font-family:'Fraunces',serif; font-weight:700; font-size:2.8rem; color:#fff; line-height:1; margin-bottom:4px; }
+    .plan-price sup { font-size:1.1rem; vertical-align:top; margin-top:7px; color:var(--orange); }
+    .plan-note { font-size:.75rem; color:#444; margin-bottom:24px; }
+    .plan-line { height:1px; background:#242424; margin-bottom:20px; }
+    .plan ul { list-style:none; display:flex; flex-direction:column; gap:9px; margin-bottom:28px; }
+    .plan ul li { font-size:.82rem; color:#999; display:flex; gap:8px; align-items:flex-start; line-height:1.5; }
+    .plan ul li::before { content:'→'; color:var(--orange); flex-shrink:0; font-size:.78rem; padding-top:1px; }
+    .plan-cta { display:block; text-align:center; padding:11px 16px; border-radius:999px; font-size:.83rem; font-weight:600; text-decoration:none; transition:all .18s; font-family:'Inter',sans-serif; }
+    .plan.pop  .plan-cta { background:var(--orange); color:#fff; }
+    .plan.pop  .plan-cta:hover { opacity:.88; transform:translateY(-1px); }
+    .plan:not(.pop) .plan-cta { border:1px solid #2a2a2a; color:#555; }
+    .plan:not(.pop) .plan-cta:hover { border-color:#444; color:#aaa; }
+    .hosting-note { text-align:center; font-size:.78rem; color:#444; margin-top:22px; }
+    .hosting-note span { color:#666; }
+
+    /* ─── CTA BANNER ─── */
+    .cta-banner {
+      background: linear-gradient(135deg, var(--orange) 0%, #ea580c 100%);
+      padding:60px 40px; text-align:center; position:relative; overflow:hidden;
+    }
+    .cta-banner::before {
+      content:''; position:absolute; top:-60px; right:-60px;
+      width:240px; height:240px; border-radius:50%;
+      background:rgba(255,255,255,.08);
+    }
+    .cta-banner::after {
+      content:''; position:absolute; bottom:-80px; left:-40px;
+      width:200px; height:200px; border-radius:50%;
+      background:rgba(255,255,255,.06);
+    }
+    .cta-banner h2 { font-family:'Fraunces',serif; font-weight:900; font-size:clamp(1.8rem,4vw,3rem); color:#fff; letter-spacing:-.02em; margin-bottom:10px; position:relative; z-index:1; }
+    .cta-banner p { color:rgba(255,255,255,.8); font-size:.93rem; margin-bottom:28px; position:relative; z-index:1; }
+    .btn-white { background:#fff; color:var(--orange); font-family:'Inter',sans-serif; font-weight:700; font-size:.9rem; padding:13px 28px; border-radius:999px; text-decoration:none; display:inline-block; transition:transform .18s, box-shadow .18s; position:relative; z-index:1; }
+    .btn-white:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,.18); }
+
+    /* ─── CONTACT ─── */
+    .contact-bg { background:var(--white); border-top:1px solid var(--line); }
+    .contact-bg .sec h2 { font-family:'Fraunces',serif; font-weight:700; font-size:clamp(1.8rem,3.5vw,2.8rem); letter-spacing:-.02em; line-height:1.12; margin-bottom:8px; }
+    .contact-bg .sec h2 em { font-style:italic; color:var(--orange); }
+    .contact-sub { font-size:.88rem; color:var(--muted); margin-bottom:36px; }
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+    .field-full { grid-column:1/-1; }
+    .field { display:flex; flex-direction:column; gap:6px; }
+    label { font-size:.7rem; font-weight:600; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); }
+    input, select, textarea {
+      background:var(--bg); border:1.5px solid var(--line); border-radius:8px;
+      color:var(--ink); font-family:'Inter',sans-serif; font-size:.9rem;
+      padding:11px 14px; outline:none; width:100%; appearance:none;
+      transition:border-color .15s, box-shadow .15s;
+    }
+    input:focus, select:focus, textarea:focus { border-color:var(--orange); box-shadow:0 0 0 3px var(--o10); }
+    input::placeholder, textarea::placeholder { color:#C4C0BB; }
+    textarea { resize:vertical; min-height:110px; }
+    .form-foot { display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-top:4px; }
+    .submit-btn {
+      background:var(--ink); color:var(--bg);
+      font-family:'Inter',sans-serif; font-weight:600; font-size:.9rem;
+      padding:13px 28px; border-radius:999px; border:none; cursor:pointer;
+      transition:transform .18s, box-shadow .18s, opacity .18s;
+      display:inline-flex; align-items:center; gap:8px;
+    }
+    .submit-btn:hover { transform:translateY(-2px); box-shadow:0 6px 18px rgba(0,0,0,.18); }
+    .submit-btn:disabled { opacity:.55; transform:none; cursor:not-allowed; }
+    .submit-spinner {
+      width:14px; height:14px; border-radius:50%;
+      border:2px solid rgba(255,255,255,.3); border-top-color:#fff;
+      display:none; animation:spinDot .7s linear infinite;
+    }
+    .form-note { font-size:.76rem; color:var(--muted); }
+    .msg { display:none; margin-top:16px; padding:15px 18px; border-radius:8px; font-size:.87rem; font-weight:500; }
+    .msg-ok  { background:#f0fdf4; border:1.5px solid #86efac; color:#166534; }
+    .msg-err { background:#fff1f2; border:1.5px solid #fca5a5; color:#991b1b; }
+
+    /* ─── FOOTER ─── */
+    footer { display:flex; align-items:center; justify-content:space-between; padding:24px 40px; background:var(--white); border-top:1px solid var(--line); }
+    .footer-logo { font-family:'Fraunces',serif; font-weight:900; font-size:1.1rem; color:var(--ink); text-decoration:none; letter-spacing:-.02em; }
+    .footer-logo span { color:var(--orange); }
+    footer p { font-size:.76rem; color:var(--muted); }
+
+    /* ─── BUTTONS ─── */
+    .btn { display:inline-block; padding:13px 26px; border-radius:999px; font-size:.88rem; font-weight:600; text-decoration:none; cursor:pointer; border:none; font-family:'Inter',sans-serif; transition:transform .18s, box-shadow .18s, opacity .18s; }
+    .btn:hover { transform:translateY(-2px); }
+    .btn-dark  { background:var(--ink); color:var(--bg); box-shadow:0 2px 10px rgba(0,0,0,.16); }
+    .btn-dark:hover { box-shadow:0 6px 18px rgba(0,0,0,.22); }
+    .btn-ghost { background:transparent; color:var(--ink); border:1.5px solid var(--line); }
+    .btn-ghost:hover { border-color:#bbb; }
+
+    /* ─── MOBILE ─── */
+    @media(max-width:700px){
+      nav { padding:16px 20px; }
+      .nav-links { display:none; flex-direction:column; gap:0; position:absolute; top:57px; left:0; right:0; background:var(--bg); border-bottom:1px solid var(--line); padding:8px 0; z-index:99; }
+      .nav-links.open { display:flex; }
+      .nav-links a { padding:12px 20px; color:var(--ink); border-bottom:1px solid var(--line); border-radius:0; }
+      .nav-links a:last-child { border-bottom:none; }
+      .nav-btn { border-radius:0; padding:12px 20px; text-align:left; }
+      .ham { display:flex; }
+      .hero { padding:48px 20px 40px; }
+      .browser-wrap { display:none; }
+      .proof { flex-wrap:wrap; }
+      .proof-item { min-width:50%; max-width:50%; border-bottom:1px solid var(--line); }
+      .proof-item:nth-child(2){ border-right:none; }
+      .proof-item:nth-child(3){ border-bottom:none; }
+      .proof-item:nth-child(4){ border-right:none; border-bottom:none; }
+      .sec { padding:52px 20px; }
+      .features { grid-template-columns:1fr; }
+      .feat { border-right:none!important; }
+      .feat:nth-last-child(-n+2){ border-bottom:1px solid var(--line); }
+      .feat:last-child{ border-bottom:none; }
+      .skills-grid { grid-template-columns:1fr; }
+      .plans { grid-template-columns:1fr; }
+      .testi-grid { grid-template-columns:1fr; }
+      .form-grid { grid-template-columns:1fr; }
+      .field-full { grid-column:1; }
+      .step { padding:24px 20px; }
+      footer { flex-direction:column; gap:10px; text-align:center; padding:20px; }
+      .cta-banner { padding:48px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">Govi<span>.</span></a>
+  <div class="nav-links" id="navLinks">
+    <a href="#work">Work</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#how">Process</a>
+    <a href="#contact" class="nav-btn">Get a quote</a>
+  </div>
+  <div class="ham" id="ham" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-pill"><div class="hero-pill-dot"></div> Taking new clients now</div>
+  <h1>Your business<br/>deserves a <em>real</em><br/>website.</h1>
+  <p>Fast, personalized websites for small businesses — built from scratch, starting at $299.</p>
+  <div class="hero-btns">
+    <a href="#contact" class="btn btn-dark">Get a free quote</a>
+    <a href="#pricing" class="btn btn-ghost">See pricing</a>
+  </div>
+
+  <!-- Browser mockup -->
+  <div class="browser-wrap">
+    <div class="browser">
+      <div class="browser-bar">
+        <div class="browser-dots">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="browser-url">
+          <span class="url-lock">🔒</span>
+          <span>yourshop.com</span>
+          <span class="mock-cursor"></span>
+        </div>
+      </div>
+      <div class="browser-body">
+        <div class="mock-nav">
+          <div class="mock-logo"></div>
+          <div class="mock-nav-links">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="mock-nav-btn"></div>
+        </div>
+        <div class="mock-hero-area">
+          <div class="mock-h1"></div>
+          <div class="mock-h1b"></div>
+          <div class="mock-sub"></div>
+          <div class="mock-btns">
+            <div class="mock-btn-a"></div>
+            <div class="mock-btn-b"></div>
+          </div>
+        </div>
+        <div class="mock-cards">
+          <div class="mock-card">
+            <div class="mock-card-icon"></div>
+            <div class="mock-card-t"></div>
+            <div class="mock-card-s"></div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-card-icon"></div>
+            <div class="mock-card-t"></div>
+            <div class="mock-card-s"></div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-card-icon"></div>
+            <div class="mock-card-t"></div>
+            <div class="mock-card-s"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track" id="marquee">
+    <div class="marquee-item"><div class="marquee-dot"></div> Barber Shops</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Personal Trainers</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Plumbers & Electricians</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Nail Salons</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Cleaning Services</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Tattoo Artists</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Coaches & Consultants</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Landscapers</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Restaurants & Cafés</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Photographers</div>
+    <!-- duplicate for seamless loop -->
+    <div class="marquee-item"><div class="marquee-dot"></div> Barber Shops</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Personal Trainers</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Plumbers & Electricians</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Nail Salons</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Cleaning Services</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Tattoo Artists</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Coaches & Consultants</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Landscapers</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Restaurants & Cafés</div>
+    <div class="marquee-item"><div class="marquee-dot"></div> Photographers</div>
+  </div>
+</div>
+
+<!-- PROOF BAR -->
+<div class="proof">
+  <div class="proof-item">
+    <div class="proof-num" data-count="299" data-prefix="$"><b>$299</b></div>
+    <div class="proof-lbl">Starting price</div>
+  </div>
+  <div class="proof-item">
+    <div class="proof-num" data-count="7" data-suffix=" days"><b>7</b> days</div>
+    <div class="proof-lbl">To go live</div>
+  </div>
+  <div class="proof-item">
+    <div class="proof-num" data-count="100" data-suffix="%"><b>100%</b></div>
+    <div class="proof-lbl">Built for you</div>
+  </div>
+  <div class="proof-item">
+    <div class="proof-num" data-count="0" data-suffix=" calls"><b>0</b> calls</div>
+    <div class="proof-lbl">Text only</div>
+  </div>
+</div>
+
+<!-- WHAT YOU GET -->
+<div class="sec rev" id="work">
+  <div class="sec-tag">What you get</div>
+  <h2>Everything included.<br/><em>Nothing unnecessary.</em></h2>
+  <div class="features">
+    <div class="feat rev rev-delay-1">
+      <div class="feat-num">01</div>
+      <h3>Built just for you</h3>
+      <p>No templates shared with thousands of others. Your site is coded from scratch around your services, your photos, your brand.</p>
+    </div>
+    <div class="feat rev rev-delay-2">
+      <div class="feat-num">02</div>
+      <h3>Works on every phone</h3>
+      <p>Over 70% of your customers browse on mobile. Your site will look perfect at any screen size, every time.</p>
+    </div>
+    <div class="feat rev rev-delay-3">
+      <div class="feat-num">03</div>
+      <h3>Shows up on Google</h3>
+      <p>Every site comes with proper SEO setup so people searching for your service in your city can find you.</p>
+    </div>
+    <div class="feat rev rev-delay-4">
+      <div class="feat-num">04</div>
+      <h3>Live in 7 days</h3>
+      <p>Send me your logo, photos, and services. You get a preview in 5–7 days and we revise until it's exactly right.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SKILLS / TRUST -->
+<div class="skills-section">
+  <div class="sec rev">
+    <div class="sec-tag">Expertise</div>
+    <h2>What I'm <em>great at.</em></h2>
+    <div class="skills-grid" id="skillsGrid">
+      <div class="skill-item">
+        <div class="skill-head"><span>Web Design</span><span class="skill-pct">95%</span></div>
+        <div class="skill-track"><div class="skill-bar" style="--w:95%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-head"><span>Mobile Responsiveness</span><span class="skill-pct">98%</span></div>
+        <div class="skill-track"><div class="skill-bar" style="--w:98%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-head"><span>Speed Optimization</span><span class="skill-pct">90%</span></div>
+        <div class="skill-track"><div class="skill-bar" style="--w:90%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-head"><span>SEO Setup</span><span class="skill-pct">85%</span></div>
+        <div class="skill-track"><div class="skill-bar" style="--w:85%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-head"><span>UI / Visual Design</span><span class="skill-pct">92%</span></div>
+        <div class="skill-track"><div class="skill-bar" style="--w:92%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-head"><span>Fast Delivery</span><span class="skill-pct">100%</span></div>
+        <div class="skill-track"><div class="skill-bar" style="--w:100%"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<div class="testi-section">
+  <div class="sec rev">
+    <div class="sec-tag">Testimonials</div>
+    <h2>What clients say.</h2>
+    <div class="testi-grid">
+      <div class="testi-card rev rev-delay-1">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"I had no website and was losing clients to competitors. Govi built me one in less than a week and now I get enquiries overnight. Best investment I made for my business."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">JT</div>
+          <div>
+            <div class="testi-name">James T.</div>
+            <div class="testi-biz">Barber Shop · London, UK</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-placeholder rev rev-delay-2">
+        <p>More reviews coming soon.<br/><span>Be the next happy client. 🙌</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRICING -->
+<div class="pricing-bg" id="pricing">
+  <div class="sec rev" style="max-width:920px;">
+    <div class="sec-tag">Pricing</div>
+    <h2>Simple pricing.</h2>
+    <p class="pricing-sub">50% upfront to start. 50% when you're happy with the result.</p>
+    <div class="plans">
+      <div class="plan rev rev-delay-1">
+        <div class="plan-tier">Starter</div>
+        <div class="plan-price"><sup>$</sup>299</div>
+        <div class="plan-note">+ domain ~$10/yr</div>
+        <div class="plan-line"></div>
+        <ul>
+          <li>5-page website</li>
+          <li>Mobile responsive</li>
+          <li>Contact form</li>
+          <li>WhatsApp button</li>
+          <li>Basic SEO setup</li>
+          <li>2 rounds of revisions</li>
+        </ul>
+        <a href="#contact" class="plan-cta" onclick="pickPlan('$299 – Starter')">Get started</a>
+      </div>
+      <div class="plan pop rev rev-delay-2">
+        <div class="pop-badge">Most popular</div>
+        <div class="plan-tier">Standard</div>
+        <div class="plan-price"><sup>$</sup>499</div>
+        <div class="plan-note">+ domain ~$10/yr</div>
+        <div class="plan-line"></div>
+        <ul>
+          <li>7-page website</li>
+          <li>Everything in Starter</li>
+          <li>Booking link (Calendly embed)</li>
+          <li>Google Maps embed</li>
+          <li>Blog page</li>
+          <li>Google Analytics</li>
+        </ul>
+        <a href="#contact" class="plan-cta" onclick="pickPlan('$499 – Standard')">Get started</a>
+      </div>
+      <div class="plan rev rev-delay-3">
+        <div class="plan-tier">Premium</div>
+        <div class="plan-price"><sup>$</sup>699</div>
+        <div class="plan-note">+ domain ~$10/yr</div>
+        <div class="plan-line"></div>
+        <ul>
+          <li>10+ pages</li>
+          <li>Everything in Standard</li>
+          <li>Custom animations</li>
+          <li>Photo gallery with lightbox</li>
+          <li>Newsletter signup (Mailchimp)</li>
+          <li>Priority 3–5 day delivery</li>
+        </ul>
+        <a href="#contact" class="plan-cta" onclick="pickPlan('$699 – Premium')">Get started</a>
+      </div>
+    </div>
+    <p class="hosting-note">Optional: <span>hosting + small updates for $49–$89/month.</span> I handle the tech, you run your business.</p>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="sec rev" id="how">
+  <div class="sec-tag">Process</div>
+  <h2>How it works.</h2>
+  <div class="steps">
+    <div class="step rev rev-delay-1">
+      <div class="step-n">1</div>
+      <div>
+        <h3>Fill in the form below</h3>
+        <p>Tell me about your business, what you do, and what you need. Takes 2 minutes.</p>
+      </div>
+    </div>
+    <div class="step rev rev-delay-2">
+      <div class="step-n">2</div>
+      <div>
+        <h3>Send me your info</h3>
+        <p>Logo, photos of your work, and a list of your services and prices. That's all I need.</p>
+      </div>
+    </div>
+    <div class="step rev rev-delay-3">
+      <div class="step-n">3</div>
+      <div>
+        <h3>I build it</h3>
+        <p>You get a live preview link in 5–7 days. We make changes until you're completely happy.</p>
+      </div>
+    </div>
+    <div class="step rev rev-delay-4">
+      <div class="step-n">4</div>
+      <div>
+        <h3>We go live</h3>
+        <p>You pay the final 50%, I connect your domain and launch. Your site is live and working.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA BANNER -->
+<div class="cta-banner rev">
+  <h2>Ready to stand out online?</h2>
+  <p>Join small businesses already winning clients with a Govi website.</p>
+  <a href="#contact" class="btn-white">Get a free quote →</a>
+</div>
+
+<!-- CONTACT -->
+<div class="contact-bg" id="contact">
+  <div class="sec rev">
+    <div class="sec-tag">Get in touch</div>
+    <h2>Get a <em>free quote.</em></h2>
+    <p class="contact-sub">Fill in the form and I'll reply within 24 hours.</p>
+
+    <form id="contactForm" novalidate>
+      <div class="form-grid">
+        <div class="field">
+          <label for="fname">Your name</label>
+          <input type="text" id="fname" name="name" placeholder="James Smith" required />
+        </div>
+        <div class="field">
+          <label for="fbiz">Business name</label>
+          <input type="text" id="fbiz" name="business" placeholder="Apex Cuts" />
+        </div>
+        <div class="field">
+          <label for="femail">Email address</label>
+          <input type="email" id="femail" name="email" placeholder="james@apexcuts.com" required />
+        </div>
+        <div class="field">
+          <label for="fplan">Budget</label>
+          <select id="fplan" name="budget">
+            <option value="">Select one…</option>
+            <option>$299 – Starter</option>
+            <option>$499 – Standard</option>
+            <option>$699 – Premium</option>
+            <option>Not sure yet</option>
+          </select>
+        </div>
+        <div class="field field-full">
+          <label for="fmsg">Tell me about your business</label>
+          <textarea id="fmsg" name="message" placeholder="What do you do, who are your customers, do you have a logo and photos ready?"></textarea>
+        </div>
+      </div>
+      <div class="form-foot">
+        <button type="submit" class="submit-btn" id="submitBtn">
+          <span id="btnText">Send my request →</span>
+          <div class="submit-spinner" id="spinner"></div>
+        </button>
+        <p class="form-note">No spam. No calls. Reply within 24 hours.</p>
+      </div>
+      <div class="msg msg-ok"  id="msgOk">✓ Got it! I'll reply within 24 hours.</div>
+      <div class="msg msg-err" id="msgErr">Something went wrong — email me directly at <strong>hello@govi.com</strong></div>
+    </form>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-logo">Govi<span>.</span></a>
+  <p>© 2025 Govi. All rights reserved.</p>
+</footer>
+
+<script>
+  /* ── nav ── */
+  function toggleNav() { document.getElementById('navLinks').classList.toggle('open'); }
+  document.querySelectorAll('#navLinks a').forEach(a =>
+    a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open'))
+  );
+
+  /* ── scroll reveal ── */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.07 });
+  document.querySelectorAll('.rev').forEach(el => io.observe(el));
+
+  /* ── skill bars (fire when section visible) ── */
+  const skillsOb = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        document.querySelectorAll('.skill-bar').forEach(bar => {
+          bar.style.width = bar.style.getPropertyValue('--w') || getComputedStyle(bar).getPropertyValue('--w');
+        });
+        skillsOb.disconnect();
+      }
+    });
+  }, { threshold: 0.3 });
+  const sg = document.getElementById('skillsGrid');
+  if (sg) skillsOb.observe(sg);
+
+  /* ── plan pre-select ── */
+  function pickPlan(val) {
+    const sel = document.getElementById('fplan');
+    [...sel.options].forEach(o => { if (o.text === val) o.selected = true; });
+  }
+
+  /* ── form submit — direct Formspree, no mailto ── */
+  // 1. Go to formspree.io → sign up free → New Form → copy your ID
+  // 2. Replace YOUR_FORM_ID below with it, e.g. "xpzgkwqr"
+  const FORMSPREE_ID = 'YOUR_FORM_ID';
+
+  const form    = document.getElementById('contactForm');
+  const btn     = document.getElementById('submitBtn');
+  const btnText = document.getElementById('btnText');
+  const spinner = document.getElementById('spinner');
+  const msgOk   = document.getElementById('msgOk');
+  const msgErr  = document.getElementById('msgErr');
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    msgOk.style.display = msgErr.style.display = 'none';
+
+    const name  = document.getElementById('fname').value.trim();
+    const email = document.getElementById('femail').value.trim();
+    if (!name || !email) {
+      msgErr.textContent = 'Please fill in your name and email address.';
+      msgErr.style.display = 'block';
+      return;
+    }
+
+    btn.disabled = true;
+    btnText.textContent = 'Sending…';
+    spinner.style.display = 'block';
+
+    try {
+      const res = await fetch(`https://formspree.io/f/mojybzyk`, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' }
+      });
+      if (!res.ok) throw new Error();
+      form.reset();
+      msgOk.style.display = 'block';
+      msgOk.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch {
+      msgErr.textContent = 'Something went wrong — email me directly at hello@govi.com';
+      msgErr.style.display = 'block';
+    } finally {
+      btn.disabled = false;
+      btnText.textContent = 'Send my request →';
+      spinner.style.display = 'none';
+    }
+  });
+</script>
+</body>
+</html>
