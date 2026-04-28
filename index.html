@@ -445,58 +445,28 @@
   const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.06});
   document.querySelectorAll('.rev').forEach(el=>io.observe(el));
   function pickPlan(val){const sel=document.getElementById('fplan');[...sel.options].forEach(o=>{if(o.text===val)o.selected=true;});}
-
+  const FORMSPREE_ID='mojybzyk';
   const form=document.getElementById('contactForm');
   const btn=document.getElementById('submitBtn');
   const btnText=document.getElementById('btnText');
   const spinner=document.getElementById('spinner');
   const msgOk=document.getElementById('msgOk');
   const msgErr=document.getElementById('msgErr');
-
   form.addEventListener('submit',async e=>{
     e.preventDefault();
     msgOk.style.display=msgErr.style.display='none';
-
     const name=document.getElementById('fname').value.trim();
     const email=document.getElementById('femail').value.trim();
-    if(!name||!email){
-      msgErr.textContent='Please fill in your name and email address.';
-      msgErr.style.display='block';
-      return;
-    }
-
-    btn.disabled=true;
-    btnText.textContent='Sending…';
-    spinner.style.display='block';
-
-    const formData={
-      name:document.getElementById('fname').value.trim(),
-      business:document.getElementById('fbiz').value.trim(),
-      email:document.getElementById('femail').value.trim(),
-      budget:document.getElementById('fplan').value,
-      message:document.getElementById('fmsg').value.trim()
-    };
-
+    if(!name||!email){msgErr.textContent='Please fill in your name and email address.';msgErr.style.display='block';return;}
+    btn.disabled=true;btnText.textContent='Sending…';spinner.style.display='block';
     try{
-      const res=await fetch('/api/contact',{
-        method:'POST',
-        body:JSON.stringify(formData),
-        headers:{'Content-Type':'application/json'}
-      });
-      if(!res.ok){
-        const errData=await res.json();
-        throw new Error(errData.error||'Submission failed');
-      }
-      form.reset();
-      msgOk.style.display='block';
-      msgOk.scrollIntoView({behavior:'smooth',block:'nearest'});
-    }catch(err){
-      msgErr.textContent=err.message||'Something went wrong — email me directly at victoiren79@gmail.com';
-      msgErr.style.display='block';
+      const res=await fetch(`https://formspree.io/f/mojybzyk`,{method:'POST',body:new FormData(form),headers:{Accept:'application/json'}});
+      if(!res.ok)throw new Error();
+      form.reset();msgOk.style.display='block';msgOk.scrollIntoView({behavior:'smooth',block:'nearest'});
+    }catch{
+      msgErr.textContent='Something went wrong — email me directly at victoiren79@gmail.com';msgErr.style.display='block';
     }finally{
-      btn.disabled=false;
-      btnText.textContent='Send my request →';
-      spinner.style.display='none';
+      btn.disabled=false;btnText.textContent='Send my request →';spinner.style.display='none';
     }
   });
 </script>
